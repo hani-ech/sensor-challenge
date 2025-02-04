@@ -62,4 +62,16 @@ sensor-challenge/
 └── tests/                  # Test cases
 ```
 
+## 🚀 Performance & Optimization
 
+This script supports execution **benchmarking** using **tic-toc** for performance measurement.
+
+To measure execution time:
+```bash
+python run.py --file
+```
+
+The script will display:
+```bash
+✅ Processing completed in 0.0123 seconds
+```
