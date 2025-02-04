@@ -58,7 +58,8 @@ sensor-challenge/
 ├── data.txt                # Default data
 ├── sensor_processor/
 │   ├── __init__.py         # Package initialization
-│   ├── processor.py        # Sensor data processing logic
+│   ├── processor_old.py    # Sensor data processing logic  
+│   ├── processor.py        # Optimized sensor data processing logic
 └── tests/                  # Test cases
 ```
 
