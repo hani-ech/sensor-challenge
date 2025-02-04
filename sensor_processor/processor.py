@@ -1,35 +1,66 @@
 import numpy as np
 
-def process_sensor_data(file_path=None):
-    """
-    Reads sensor data from a file or stdin, processes it, and prints the results.
-    """
-    if file_path:
-        with open(file_path, "r") as f:
-            input_data = f.read().strip().split("\n")
-    else:
-        import sys
-        input_data = sys.stdin.read().strip().split("\n")
+class Sensor:
+    """Represents a single sensor and its measurements."""
 
-    # Parse first line (number of sensors, number of measurements per sensor)
-    n, m = map(int, input_data[0].split())
-    
-    # Parse thresholds
-    thresholds = list(map(int, input_data[1].split()))
-    
-    results = []
-    
-    # Process each sensor
-    for i, line in enumerate(input_data[2:2 + n]):  # Skip first two lines
-        measurements = np.array(list(map(int, line.strip().split(","))))  # Convert to NumPy array
-        sensor_name = f"S{i+1}"  # Generate sensor names (S1, S2, ...)
+    def __init__(self, name, measurements):
+        self.name = name
+        self.measurements = np.array(measurements)  # Store as NumPy array for efficiency
+
+    def count_exceedances(self, thresholds):
+        """Returns a list of counts for how many measurements exceed each threshold."""
         
-        # Count values exceeding each threshold using NumPy
-        counts = [np.sum(measurements > threshold) for threshold in thresholds]
+        exceedances = [np.sum(self.measurements > t) for t in thresholds]
         
-        # Store result
-        results.append(f"{sensor_name} {' '.join(map(str, counts))}")
+        return exceedances
+
+
+class SensorProcessor:
+    """Handles input parsing, processing, and result formatting."""
     
-    # Print results
-    for result in results:
-        print(result)
+    def __init__(self, input_data):
+        self.sensors = []
+        self.thresholds = []
+        self._parse_input(input_data)
+        
+    def _parse_input(self, input_data):
+        """Parses the input data to extract sensor measurements and thresholds."""
+        lines = input_data.strip().split("\n")
+
+        # Validate input length
+        if len(lines) < 2:
+            raise ValueError("❌ Invalid input: Expected at least two lines (metadata & thresholds).")
+
+        try:
+            n, m = map(int, lines[0].split())  # Number of sensors & number of thresholds
+            self.thresholds = list(map(int, lines[1].split()))  # Threshold values
+        except ValueError:
+            raise ValueError("❌ Invalid input: First two lines must contain numbers.")
+
+        # Validate sensor data
+        if len(lines) < 2 + n:
+            raise ValueError(f"❌ Invalid input: Expected {n} sensor lines but found {len(lines) - 2}.")
+
+        self.sensors = []
+
+        for i, line in enumerate(lines[2:]):  # Skip first 2 lines (metadata + thresholds)
+
+            if "," in line:  #  File input case (comma-separated)
+                sensor_name = f"S{i+1}"
+                measurements = list(map(int, line.split(",")))  # Convert CSV to integer list
+            else:  #  Stdin input case (space-separated)
+                parts = line.split()
+                sensor_name = parts[0]
+                measurements = list(map(int, parts[1:]))  # Convert remaining parts to integers
+
+            
+            self.sensors.append(Sensor(sensor_name, measurements))
+
+    
+    def process(self):
+        """Processes all sensors and returns formatted results."""
+        results = []
+        for sensor in self.sensors:
+            counts = sensor.count_exceedances(self.thresholds)
+            results.append(f"{sensor.name} {' '.join(map(str, counts))}")  # Ensure clean formatting
+        return results

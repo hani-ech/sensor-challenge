@@ -1,30 +1,42 @@
 import argparse
-import os
+import sys
 import time
-from sensor_processor.processor import process_sensor_data
-
-# Set up argument parser
-parser = argparse.ArgumentParser(description="Process sensor data from a file or stdin.")
-parser.add_argument("--file", type=str, help="Path to the sensor data file (optional)")
-args = parser.parse_args()
-
-# Select data source
-DATA_FILE = args.file if args.file else "data.txt"
+from sensor_processor.processor import SensorProcessor
 
 def main():
-    # Measure start time
-    start_time = time.time()
+    # Argument parser for file input
+    parser = argparse.ArgumentParser(description="Process sensor data from a file or stdin.")
+    parser.add_argument("--file", nargs="?", const="data.txt", type=str, help="Path to the sensor data file (default: data.txt if no file specified)")
+    args = parser.parse_args()
 
-    # Check if file exists
-    if os.path.exists(DATA_FILE):
-        print(f"📂 Loading data from {DATA_FILE}...")
-        process_sensor_data(DATA_FILE)
+
+    # Read input from file or stdin
+    if args.file:
+        with open(args.file, "r") as f:
+            input_data = f.read().strip()  # Read from file and remove extra spaces
     else:
-        print("⚠️ No data file found. Please provide data via stdin.")
+        print("\nEnter sensor data (press Ctrl+D when done):")
+        input_data = sys.stdin.read().strip()  # Read **full multiline input** from stdin
+        
 
-    # Measure execution time
-    end_time = time.time()
-    print(f"\n⏳ Execution time: {end_time - start_time:.4f} seconds")
+    print("\n⏳ Processing started...")
+
+    # Tic: Start timing
+    tic = time.time()
+
+    # Process the data
+    processor = SensorProcessor(input_data)
+    results = processor.process()
+
+    # Toc: End timing
+    toc = time.time()
+
+    # Print results
+    for result in results:
+        print(result)
+
+    # Print execution time
+    print(f"\n✅ Processing completed in {toc - tic:.4f} seconds")
 
 if __name__ == "__main__":
     main()
