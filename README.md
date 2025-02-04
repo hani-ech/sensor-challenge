@@ -18,20 +18,28 @@ A Python package that reads sensor measurements from either **standard input (st
 ## ⚡ Installation
 
 ### 1️⃣ Clone the Repository
-
+```bash
 git clone https://github.com/hani-ech/sensor-challenge.git
+```
+or
+```bash
 cd sensor-challenge
-
+```
 
 ### 2️⃣ Set Up a Virtual Environment
+```bash
 python3 -m venv sensor-env
 source sensor-env/bin/activate  # On Linux/macOS
-# or
+```
+or
+```bash
 sensor-env\Scripts\activate  # On Windows
+```
 
 ### 3️⃣ Install Dependencies
+```bash
 pip install -r requirements.txt
-
+```
 
 ## 🚀 Usage
 
