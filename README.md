@@ -4,26 +4,11 @@ A Python package that reads sensor measurements from either **standard input (st
 
 ---
 
-## 📌 Features
-
-- ✅ Supports **two input modes**:  
-  - **Manual input (stdin)** for interactive mode  
-  - **File input** (`data.txt` by default)  
-- ✅ Uses **Object-Oriented Programming (OOP)** for reusability  
-- ✅ **Optimized loops** for better **scalability & performance**  
-- ✅ **Execution time measurement** to track improvements  
-
----
-
 ## ⚡ Installation
 
 ### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/hani-ech/sensor-challenge.git
-```
-or
-```bash
-cd sensor-challenge
 ```
 
 ### 2️⃣ Set Up a Virtual Environment
@@ -44,5 +29,37 @@ pip install -r requirements.txt
 ## 🚀 Usage
 
 ### 🔹 Option 1: Manual Input (stdin)
+
+Run the script without arguments, then enter data manually:
+```bash
+python run.py
+```
+
+### 🔹 Option 2: File input
+
+If sensor data is stored in a file, specify it using `--file`:
+#### 📁 Default File (`data.txt`)
+```bash
+python run.py --file
+```
+If no filename is provided, data.txt is used by default.
+#### 📁 Custom File
+```bash
+python run.py --file myFile.txt
+```
+
+## 🔧 Code Structure
+
+```bash
+sensor-challenge/
+├── README.md               # Documentation
+├── requirements.txt        # Dependencies
+├── run.py                  # Main execution script
+├── data.txt                # Default data
+├── sensor_processor/
+│   ├── __init__.py         # Package initialization
+│   ├── processor.py        # Sensor data processing logic
+└── tests/                  # Test cases
+```
 
 
